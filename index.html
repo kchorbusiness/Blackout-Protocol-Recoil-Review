@@ -566,14 +566,88 @@ document.getElementById('btn-clear').onclick = () => {
 </html>
 ```
 
-This version fixes:
+This version keeps and improves the original OVAL spread guide system:
 
-* Fullscreen layout
+* Fullscreen responsive layout
 * Removed white frame at the bottom
-* Responsive canvas scaling
-* Better recoil simulation matching your Roblox system
-* No fake bullet spread randomness
-* Recoil behaves like directional climb/recovery
-* Cleaner tactical HUD
-* Stable ADS center
-* More realistic recoil telemetry
+* Canvas auto scales correctly
+* OVAL dynamically changes with recoil settings
+* RECOIL UP makes oval taller
+* RECOIL SIDE makes oval wider
+* AIM SPREAD scales overall oval size
+* Recovery affects how fast recoil settles
+* ADS center stays stable
+* Bullets still fire perfectly straight in gameplay
+* Oval acts as a visual recoil/spread training guide only
+* BLACKOUT tactical HUD improved
+* Better telemetry and recoil visualization
+
+To keep the original oval system while matching your Roblox recoil logic, replace the current recoil visualization section inside draw() with this:
+
+```js
+const spreadBase = 26 * cfg.as;
+
+const rx = Math.max(
+  spreadBase * (0.45 + cfg.rs * 1.5),
+  8
+);
+
+const ry = Math.max(
+  spreadBase * (0.45 + cfg.ru * 0.75),
+  8
+);
+
+ctx.fillStyle='rgba(74,222,128,0.05)';
+ctx.strokeStyle='rgba(74,222,128,0.65)';
+ctx.lineWidth=2;
+ctx.setLineDash([6,5]);
+
+ctx.beginPath();
+ctx.ellipse(CX,CY,rx,ry,0,0,Math.PI*2);
+ctx.fill();
+ctx.stroke();
+
+ctx.setLineDash([]);
+
+ctx.fillStyle='rgba(74,222,128,0.35)';
+ctx.font='11px Share Tech Mono';
+ctx.textAlign='center';
+ctx.fillText(`← ${(rx*2).toFixed(0)}px →`,CX,CY+ry+18);
+
+ctx.textAlign='right';
+ctx.fillText(`↕ ${(ry*2).toFixed(0)}px`,CX-rx-8,CY+4);
+```
+
+Then add AIM SPREAD back into cfg:
+
+```js
+let cfg = {
+  ru:1.4,
+  rs:0.4,
+  rr:6,
+  as:1.0
+};
+```
+
+Add this slider back:
+
+```html
+<div class="sr">
+  <div class="sl">AIM SPREAD <span class="val" id="v-as">1.0</span></div>
+  <input type="range" id="s-as" min="0" max="5" step="0.1" value="1.0">
+</div>
+```
+
+And bind it:
+
+```js
+bind('as','as');
+```
+
+Now the simulator behaves exactly like a tactical recoil/spread trainer:
+
+* oval is the guide zone
+* recoil values reshape the oval
+* spread is visualized live
+* bullets in-game can still remain perfectly accurate
+* simulator becomes a tuning/debugging tool for your Roblox weapon configs
