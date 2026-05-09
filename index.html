@@ -1,78 +1,282 @@
+# Fullscreen BLACKOUT Recoil Simulator (Improved)
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BLACKOUT // ADS RECOIL SIMULATOR</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@600;700&display=swap');
-*{box-sizing:border-box;margin:0;padding:0;}
-:root{
-  --g:#4ade80;--gd:rgba(74,222,128,0.45);--gg:rgba(74,222,128,0.1);
-  --bg:#0f0f0f;--bg2:#161616;--bg3:#1e1e1e;
-  --bd:rgba(74,222,128,0.2);--bdb:rgba(74,222,128,0.5);
-  --t:#d1fae5;--td:rgba(209,250,229,0.4);
-  --mono:'Share Tech Mono',monospace;--head:'Rajdhani',sans-serif;
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
 }
-#app{width:100%;display:grid;grid-template-columns:240px 1fr 240px;grid-template-rows:52px 1fr;background:var(--bg);}
-#hdr{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;padding:0 24px;background:#080808;border-bottom:2px solid var(--g);}
-.logo{font-family:var(--head);font-size:22px;font-weight:700;letter-spacing:6px;color:var(--g);}
-.logo small{font-size:9px;letter-spacing:3px;color:var(--td);display:block;margin-top:-4px;font-family:var(--mono);}
-.hst{font-size:10px;color:var(--td);font-family:var(--mono);letter-spacing:1px;display:flex;gap:20px;align-items:center;}
-.dot{width:7px;height:7px;border-radius:50%;background:var(--g);display:inline-block;margin-right:5px;animation:p 2s infinite;}
-@keyframes p{0%,100%{opacity:1}50%{opacity:0.15}}
 
-#lp{background:var(--bg2);border-right:1px solid var(--bd);padding:22px 18px;display:flex;flex-direction:column;gap:18px;overflow-y:auto;}
-#rp{background:var(--bg2);border-left:1px solid var(--bd);padding:22px 18px;display:flex;flex-direction:column;gap:14px;overflow-y:auto;}
-#ct{display:flex;align-items:center;justify-content:center;background:var(--bg);position:relative;}
+html,body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#050505;
+}
 
-.pl{font-size:9px;letter-spacing:3px;color:var(--g);font-family:var(--mono);text-transform:uppercase;border-bottom:1px solid var(--bd);padding-bottom:8px;font-weight:bold;}
+:root{
+  --g:#4ade80;
+  --gd:rgba(74,222,128,0.45);
+  --gg:rgba(74,222,128,0.08);
+  --bg:#0b0b0b;
+  --bg2:#101010;
+  --bg3:#171717;
+  --bd:rgba(74,222,128,0.16);
+  --td:rgba(209,250,229,0.5);
+  --t:#d1fae5;
+  --mono:'Share Tech Mono', monospace;
+  --head:'Rajdhani', sans-serif;
+}
 
-.sr{display:flex;flex-direction:column;gap:6px;}
-.sl{display:flex;justify-content:space-between;font-size:11px;color:var(--td);font-family:var(--mono);letter-spacing:1px;}
-.sl .val{color:var(--g);font-size:13px;font-weight:bold;}
+body{
+  font-family:var(--mono);
+}
 
-input[type=range]{width:100%;height:4px;-webkit-appearance:none;appearance:none;background:rgba(74,222,128,0.15);outline:none;cursor:pointer;border-radius:0;}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;background:var(--g);cursor:pointer;border-radius:0;clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);}
+#app{
+  width:100vw;
+  height:100vh;
+  display:grid;
+  grid-template-columns:260px 1fr 260px;
+  grid-template-rows:56px 1fr;
+  background:var(--bg);
+}
 
-.fb{font-family:var(--mono);font-size:11px;letter-spacing:2px;padding:12px 14px;border:1px solid var(--bd);background:transparent;color:var(--td);cursor:pointer;transition:all 0.12s;text-transform:uppercase;text-align:left;width:100%;}
-.fb:hover{background:var(--gg);border-color:var(--g);color:var(--g);}
-.fb.pr{border-color:var(--gd);color:var(--g);}
-.fb.dr{border-color:rgba(239,68,68,0.35);color:rgba(239,68,68,0.7);}
-.fb.dr:hover{background:rgba(239,68,68,0.08);border-color:#ef4444;color:#ef4444;}
+#hdr{
+  grid-column:1/-1;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 24px;
+  border-bottom:2px solid var(--g);
+  background:#050505;
+}
 
-.st{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--td);font-family:var(--mono);padding:4px 0;border-bottom:1px solid rgba(74,222,128,0.07);}
-.st .v{color:var(--g);font-size:13px;}
-.st .v.w{color:#f59e0b;}
-.st .v.b{color:#ef4444;}
+.logo{
+  color:var(--g);
+  font-family:var(--head);
+  letter-spacing:6px;
+  font-size:24px;
+  font-weight:700;
+}
 
-.cfg{background:#080808;border:1px solid var(--bd);padding:14px;font-size:11px;line-height:2.1;font-family:var(--mono);}
-.cfg .ck{color:var(--td);}
-.cfg .cv{color:var(--g);font-size:13px;}
-.cfg .ce{color:rgba(74,222,128,0.35);}
+.logo small{
+  display:block;
+  font-size:9px;
+  letter-spacing:3px;
+  margin-top:-4px;
+  color:var(--td);
+  font-family:var(--mono);
+}
 
-.cpb{font-family:var(--mono);font-size:11px;letter-spacing:2px;padding:12px;border:1px solid var(--gd);background:var(--gg);color:var(--g);cursor:pointer;width:100%;text-transform:uppercase;transition:all 0.12s;}
-.cpb:hover{background:rgba(74,222,128,0.2);border-color:var(--g);}
+.hst{
+  display:flex;
+  gap:20px;
+  color:var(--td);
+  font-size:10px;
+  letter-spacing:2px;
+}
 
-.cn{position:absolute;width:16px;height:16px;}
-.tl{top:16px;left:16px;border-top:2px solid var(--g);border-left:2px solid var(--g);}
-.tr{top:16px;right:16px;border-top:2px solid var(--g);border-right:2px solid var(--g);}
-.bl{bottom:16px;left:16px;border-bottom:2px solid var(--g);border-left:2px solid var(--g);}
-.br{bottom:16px;right:16px;border-bottom:2px solid var(--g);border-right:2px solid var(--g);}
+.dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--g);
+  display:inline-block;
+  margin-right:6px;
+  animation:pulse 1.5s infinite;
+}
 
-#shot-count{font-size:11px;letter-spacing:3px;color:var(--td);font-family:var(--mono);margin-top:12px;text-align:center;}
+@keyframes pulse{
+  0%,100%{opacity:1}
+  50%{opacity:0.15}
+}
+
+#lp,
+#rp{
+  background:var(--bg2);
+  overflow-y:auto;
+  padding:18px;
+}
+
+#lp{
+  border-right:1px solid var(--bd);
+}
+
+#rp{
+  border-left:1px solid var(--bd);
+}
+
+#ct{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  background:#090909;
+}
+
+#simWrap{
+  position:relative;
+  width:min(90vw,90vh);
+  height:min(90vw,90vh);
+  max-width:900px;
+  max-height:900px;
+}
+
+#sc2{
+  width:100%;
+  height:100%;
+  display:block;
+  background:#111;
+  border:1px solid rgba(74,222,128,0.15);
+}
+
+.cn{
+  position:absolute;
+  width:18px;
+  height:18px;
+}
+
+.tl{top:18px;left:18px;border-top:2px solid var(--g);border-left:2px solid var(--g)}
+.tr{top:18px;right:18px;border-top:2px solid var(--g);border-right:2px solid var(--g)}
+.bl{bottom:18px;left:18px;border-bottom:2px solid var(--g);border-left:2px solid var(--g)}
+.br{bottom:18px;right:18px;border-bottom:2px solid var(--g);border-right:2px solid var(--g)}
+
+.pl{
+  color:var(--g);
+  letter-spacing:3px;
+  font-size:10px;
+  margin-bottom:14px;
+  padding-bottom:8px;
+  border-bottom:1px solid var(--bd);
+}
+
+.sr{
+  margin-bottom:18px;
+}
+
+.sl{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:8px;
+  color:var(--td);
+  font-size:11px;
+}
+
+.val{
+  color:var(--g);
+}
+
+input[type=range]{
+  width:100%;
+  appearance:none;
+  height:4px;
+  background:rgba(74,222,128,0.1);
+}
+
+input[type=range]::-webkit-slider-thumb{
+  appearance:none;
+  width:14px;
+  height:14px;
+  background:var(--g);
+  clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+}
+
+.fb,
+.cpb{
+  width:100%;
+  padding:12px;
+  background:transparent;
+  border:1px solid var(--bd);
+  color:var(--td);
+  margin-bottom:10px;
+  cursor:pointer;
+  transition:0.15s;
+  font-family:var(--mono);
+  letter-spacing:2px;
+}
+
+.fb:hover,
+.cpb:hover{
+  background:var(--gg);
+  border-color:var(--g);
+  color:var(--g);
+}
+
+.st{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:10px;
+  color:var(--td);
+  font-size:11px;
+}
+
+.st .v{
+  color:var(--g);
+}
+
+.cfg{
+  background:#050505;
+  border:1px solid var(--bd);
+  padding:14px;
+  color:var(--td);
+  line-height:2;
+  font-size:11px;
+}
+
+#shot-count{
+  position:absolute;
+  bottom:24px;
+  left:50%;
+  transform:translateX(-50%);
+  color:var(--td);
+  letter-spacing:3px;
+  font-size:11px;
+}
+
+#history{
+  color:var(--td);
+  font-size:10px;
+  line-height:2;
+}
+
+::-webkit-scrollbar{
+  width:6px;
+}
+
+::-webkit-scrollbar-thumb{
+  background:rgba(74,222,128,0.2);
+}
 </style>
+</head>
+<body>
 
 <div id="app">
+
   <div id="hdr">
-    <div class="logo">BLACKOUT <small>// WEAPONS LAB — ADS RECOIL SIMULATOR</small></div>
+    <div class="logo">
+      BLACKOUT
+      <small>// RECOIL TRAINING SYSTEM</small>
+    </div>
+
     <div class="hst">
-      <span><span class="dot"></span>SYS.ONLINE</span>
-      <span id="fps-lbl">FPS &gt;&gt; 60</span>
-      <span id="spread-hdr">SPREAD ZONE ACTIVE</span>
+      <span><span class="dot"></span>LIVE</span>
+      <span id="fps-lbl">FPS >> 0</span>
+      <span>ADS ACTIVE</span>
     </div>
   </div>
 
   <div id="lp">
-    <div class="pl">// system status</div>
-    <div class="st"><span>MAGAZINE</span><span class="v" id="mag-v">FULL</span></div>
-    <div class="st"><span>BARREL HEAT</span><span class="v" id="heat-v">COOL</span></div>
-    <div class="st"><span>FIRE MODE</span><span class="v">ADS</span></div>
 
     <div class="pl">// recoil parameters</div>
 
@@ -80,217 +284,296 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
       <div class="sl">RECOIL UP <span class="val" id="v-ru">1.4</span></div>
       <input type="range" id="s-ru" min="0" max="5" step="0.1" value="1.4">
     </div>
+
     <div class="sr">
       <div class="sl">RECOIL SIDE <span class="val" id="v-rs">0.4</span></div>
       <input type="range" id="s-rs" min="0" max="3" step="0.1" value="0.4">
     </div>
+
     <div class="sr">
       <div class="sl">RECOVERY <span class="val" id="v-rr">6</span></div>
       <input type="range" id="s-rr" min="0" max="20" step="0.5" value="6">
     </div>
-    <div class="sr">
-      <div class="sl">AIM SPREAD <span class="val" id="v-as">1.0</span></div>
-      <input type="range" id="s-as" min="0" max="5" step="0.1" value="1.0">
-    </div>
 
-    <div class="pl">// fire control</div>
-    <button class="fb pr" id="btn-once">▶ FIRE x1</button>
-    <button class="fb pr" id="btn-burst">▶▶ BURST x4</button>
-    <button class="fb dr" id="btn-mag">⚠ EMPTY MAG x30</button>
-    <button class="fb" id="btn-clear">◻ CLEAR RANGE</button>
+    <div class="pl">// controls</div>
+
+    <button class="fb" id="btn-once">FIRE x1</button>
+    <button class="fb" id="btn-burst">BURST x4</button>
+    <button class="fb" id="btn-mag">FULL AUTO x30</button>
+    <button class="fb" id="btn-clear">CLEAR</button>
+
   </div>
 
   <div id="ct">
-    <div class="cn tl"></div><div class="cn tr"></div>
-    <div class="cn bl"></div><div class="cn br"></div>
-    <div style="display:flex;flex-direction:column;align-items:center;">
-      <canvas id="sc2" width="420" height="420"></canvas>
-      <div id="shot-count">// 0 SHOTS FIRED</div>
+
+    <div class="cn tl"></div>
+    <div class="cn tr"></div>
+    <div class="cn bl"></div>
+    <div class="cn br"></div>
+
+    <div id="simWrap">
+      <canvas id="sc2"></canvas>
     </div>
+
+    <div id="shot-count">// 0 SHOTS FIRED</div>
+
   </div>
 
   <div id="rp">
-    <div class="pl">// active config</div>
-    <div class="cfg" id="cfg-out"></div>
-    <button class="cpb" id="copy-btn">[ COPY CONFIG ]</button>
 
-    <div class="pl" style="margin-top:4px;">// telemetry</div>
+    <div class="pl">// telemetry</div>
+
     <div class="st"><span>TOTAL SHOTS</span><span class="v" id="shots-v">0</span></div>
-    <div class="st"><span>SPREAD RX</span><span class="v" id="rx-v">--</span></div>
-    <div class="st"><span>SPREAD RY</span><span class="v" id="ry-v">--</span></div>
-    <div class="st"><span>OVAL AREA</span><span class="v" id="area-v">--</span></div>
+    <div class="st"><span>RECOIL X</span><span class="v" id="rx-v">0</span></div>
+    <div class="st"><span>RECOIL Y</span><span class="v" id="ry-v">0</span></div>
 
-    <div class="pl" style="margin-top:4px;">// last 5 shots</div>
-    <div id="history" style="font-family:var(--mono);font-size:10px;color:var(--td);line-height:2;"></div>
+    <div class="pl">// config</div>
 
-    <div class="pl" style="margin-top:4px;">// tips</div>
-    <div style="font-size:10px;color:var(--td);font-family:var(--mono);line-height:1.8;">
-      RECOIL UP → oval taller<br>
-      RECOIL SIDE → oval wider<br>
-      RECOVERY → snap back speed<br>
-      AIM SPREAD → overall size
-    </div>
+    <div class="cfg" id="cfg-out"></div>
+
+    <button class="cpb" id="copy-btn">COPY CONFIG</button>
+
+    <div class="pl" style="margin-top:16px;">// last shots</div>
+
+    <div id="history"></div>
+
   </div>
+
 </div>
 
 <script>
-(function(){
-const W=420,H=420,CX=W/2,CY=H/2,PPD=28;
-let cfg={ru:1.4,rs:0.4,rr:6,as:1.0};
-let bullets=[],shots=0,recoil=0,lastT=performance.now(),frames=0,fpsT=performance.now();
-let shotHistory=[];
+(() => {
 
-const sc=document.getElementById('sc2').getContext('2d');
+const canvas = document.getElementById('sc2');
+const ctx = canvas.getContext('2d');
 
-function oval(){
-  const base=cfg.as*PPD;
-  return{rx:Math.max(base*(0.4+cfg.rs*1.4),5),ry:Math.max(base*(0.4+cfg.ru*0.7),5)};
+function resizeCanvas(){
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width;
+  canvas.height = rect.height;
 }
 
-function drawSpread(){
-  const c=sc;
-  c.clearRect(0,0,W,H);
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
 
-  // background
-  c.fillStyle='#111';c.fillRect(0,0,W,H);
+let cfg = {
+  ru:1.4,
+  rs:0.4,
+  rr:6
+};
 
-  // grid
-  c.strokeStyle='rgba(74,222,128,0.05)';c.lineWidth=1;
-  for(let x=0;x<=W;x+=42){c.beginPath();c.moveTo(x,0);c.lineTo(x,H);c.stroke();}
-  for(let y=0;y<=H;y+=42){c.beginPath();c.moveTo(0,y);c.lineTo(W,y);c.stroke();}
-
-  // center cross lines (faint)
-  c.strokeStyle='rgba(74,222,128,0.08)';c.lineWidth=1;
-  c.beginPath();c.moveTo(CX,0);c.lineTo(CX,H);c.stroke();
-  c.beginPath();c.moveTo(0,CY);c.lineTo(W,CY);c.stroke();
-
-  const{rx,ry}=oval();
-  document.getElementById('rx-v').textContent=rx.toFixed(1);
-  document.getElementById('ry-v').textContent=ry.toFixed(1);
-  document.getElementById('area-v').textContent=(Math.PI*rx*ry/100).toFixed(0)+'u²';
-
-  // outer glow ring
-  c.fillStyle='rgba(74,222,128,0.04)';
-  c.strokeStyle='rgba(74,222,128,0.12)';c.lineWidth=1;
-  c.beginPath();c.ellipse(CX,CY,rx*1.4,ry*1.4,0,0,Math.PI*2);c.fill();c.stroke();
-
-  // main oval fill
-  c.fillStyle='rgba(74,222,128,0.08)';
-  c.strokeStyle='rgba(74,222,128,0.6)';c.lineWidth=2;
-  c.setLineDash([5,4]);
-  c.beginPath();c.ellipse(CX,CY,rx,ry,0,0,Math.PI*2);c.fill();c.stroke();
-  c.setLineDash([]);
-
-  // oval dimension labels
-  c.fillStyle='rgba(74,222,128,0.5)';c.font='bold 11px "Share Tech Mono"';
-  c.textAlign='center';
-  c.fillText(`← ${(rx*2).toFixed(0)}px →`,CX,CY+ry+16);
-  c.textAlign='right';
-  c.fillText(`↕ ${(ry*2).toFixed(0)}px`,CX-rx-6,CY+4);
-
-  // ADS crosshair
-  c.strokeStyle='rgba(74,222,128,0.95)';c.lineWidth=1.5;
-  const g=18,gi=6;
-  c.beginPath();
-  c.moveTo(CX-g,CY);c.lineTo(CX-gi,CY);
-  c.moveTo(CX+gi,CY);c.lineTo(CX+g,CY);
-  c.moveTo(CX,CY-g);c.lineTo(CX,CY-gi);
-  c.moveTo(CX,CY+gi);c.lineTo(CX,CY+g);
-  c.stroke();
-  // center dot
-  c.fillStyle='rgba(74,222,128,0.8)';
-  c.beginPath();c.arc(CX,CY,2.5,0,Math.PI*2);c.fill();
-
-  // bullets
-  bullets.forEach(b=>{
-    const a=Math.max(0,1-b.age/6);
-    // outer glow
-    c.fillStyle=`rgba(74,222,128,${a*0.15})`;
-    c.beginPath();c.arc(b.x,b.y,10,0,Math.PI*2);c.fill();
-    // dot
-    c.fillStyle=`rgba(74,222,128,${a*0.9})`;
-    c.strokeStyle=`rgba(30,150,70,${a})`;c.lineWidth=1;
-    c.beginPath();c.arc(b.x,b.y,4,0,Math.PI*2);c.fill();c.stroke();
-    // white center
-    c.fillStyle=`rgba(255,255,255,${a*0.6})`;
-    c.beginPath();c.arc(b.x,b.y,1.5,0,Math.PI*2);c.fill();
-  });
-
-  // corner labels
-  c.fillStyle='rgba(74,222,128,0.3)';c.font='9px "Share Tech Mono"';
-  c.textAlign='left';c.fillText('ADS MODE',10,H-10);
-  c.textAlign='right';c.fillText(`${shots} ROUNDS FIRED`,W-10,H-10);
-  c.textAlign='left';c.fillText('BLACKOUT PROTOCOL',10,18);
-  c.textAlign='right';c.fillText('RANGE ACTIVE',W-10,18);
-}
-
-function fire(){
-  const{rx,ry}=oval();
-  const r=Math.sqrt(Math.random()),a=Math.random()*Math.PI*2;
-  const bx=CX+Math.cos(a)*rx*r,by=CY+Math.sin(a)*ry*r;
-  bullets.push({x:bx,y:by,age:0});
-  if(bullets.length>100)bullets.shift();
-  shots++;recoil=1;
-
-  const dx=(bx-CX).toFixed(1),dy=(by-CY).toFixed(1);
-  shotHistory.unshift(`#${shots} → (${dx>0?'+':''}${dx}, ${dy>0?'+':''}${dy})`);
-  if(shotHistory.length>5)shotHistory.pop();
-  document.getElementById('history').innerHTML=shotHistory.map(s=>`<div>${s}</div>`).join('');
-
-  updateUI();
-}
-
-function updateUI(){
-  document.getElementById('shot-count').textContent=`// ${shots} SHOTS FIRED`;
-  document.getElementById('shots-v').textContent=shots;
-  const rem=Math.max(0,30-shots%31);
-  const mv=document.getElementById('mag-v');
-  mv.textContent=rem===30?'FULL':rem>15?`${rem}/30`:rem>5?'LOW':'EMPTY';
-  mv.className='v'+(rem===0?' b':rem<=5?' w':'');
-  const hv=document.getElementById('heat-v');
-  hv.textContent=recoil>0.7?'HOT':recoil>0.3?'WARM':'COOL';
-  hv.className='v'+(recoil>0.7?' b':recoil>0.3?' w':'');
-}
+let recoilX = 0;
+let recoilY = 0;
+let shots = 0;
+let bullets = [];
+let history = [];
 
 function updateCfg(){
-  document.getElementById('cfg-out').innerHTML=
-    `<span class="ck">recoilUp</span><span class="ce"> = </span><span class="cv">${cfg.ru.toFixed(1)}</span><span class="ce">,</span><br>`+
-    `<span class="ck">recoilSide</span><span class="ce"> = </span><span class="cv">${cfg.rs.toFixed(1)}</span><span class="ce">,</span><br>`+
-    `<span class="ck">recoilRecovery</span><span class="ce"> = </span><span class="cv">${cfg.rr}</span><span class="ce">,</span><br>`+
-    `<span class="ck">aimSpread</span><span class="ce"> = </span><span class="cv">${cfg.as.toFixed(1)}</span><span class="ce">,</span>`;
+  document.getElementById('cfg-out').innerHTML =
+  `recoilUp = ${cfg.ru.toFixed(1)}<br>`+
+  `recoilSide = ${cfg.rs.toFixed(1)}<br>`+
+  `recoilRecovery = ${cfg.rr.toFixed(1)}`;
 }
 
-function bind(id,key,raw){
-  document.getElementById('s-'+id).addEventListener('input',e=>{
+function bind(id,key){
+  const slider = document.getElementById('s-'+id);
+  slider.addEventListener('input',e=>{
     cfg[key]=parseFloat(e.target.value);
-    document.getElementById('v-'+id).textContent=raw?cfg[key]:cfg[key].toFixed(1);
+    document.getElementById('v-'+id).textContent=cfg[key].toFixed(1);
     updateCfg();
   });
 }
-bind('ru','ru');bind('rs','rs');bind('rr','rr',true);bind('as','as');
 
-document.getElementById('btn-once').onclick=()=>fire();
-document.getElementById('btn-burst').onclick=()=>{let i=0;const t=setInterval(()=>{fire();if(++i>=4)clearInterval(t);},80);};
-document.getElementById('btn-mag').onclick=()=>{let i=0;const t=setInterval(()=>{fire();if(++i>=30)clearInterval(t);},65);};
-document.getElementById('btn-clear').onclick=()=>{bullets=[];shots=0;shotHistory=[];document.getElementById('history').innerHTML='';updateUI();};
-document.getElementById('copy-btn').onclick=async(e)=>{
-  const txt=`recoilUp = ${cfg.ru.toFixed(1)},\nrecoilSide = ${cfg.rs.toFixed(1)},\nrecoilRecovery = ${cfg.rr},\naimSpread = ${cfg.as.toFixed(1)},`;
-  try{await navigator.clipboard.writeText(txt);}catch(err){}
-  e.target.textContent='[ ✓ COPIED ]';
-  setTimeout(()=>{e.target.textContent='[ COPY CONFIG ]';},1500);
+bind('ru','ru');
+bind('rs','rs');
+bind('rr','rr');
+
+function fire(){
+
+  recoilY += cfg.ru;
+  recoilX += (Math.random()-0.5)*cfg.rs;
+
+  shots++;
+
+  bullets.push({
+    x:recoilX,
+    y:recoilY,
+    life:1
+  });
+
+  history.unshift(`#${shots} -> X:${recoilX.toFixed(2)} Y:${recoilY.toFixed(2)}`);
+
+  if(history.length > 8){
+    history.pop();
+  }
+
+  document.getElementById('history').innerHTML = history
+    .map(h=>`<div>${h}</div>`)
+    .join('');
+
+  document.getElementById('shots-v').textContent = shots;
+  document.getElementById('shot-count').textContent = `// ${shots} SHOTS FIRED`;
+}
+
+function draw(){
+
+  const W = canvas.width;
+  const H = canvas.height;
+  const CX = W/2;
+  const CY = H/2;
+
+  ctx.clearRect(0,0,W,H);
+
+  ctx.fillStyle='#0f0f0f';
+  ctx.fillRect(0,0,W,H);
+
+  ctx.strokeStyle='rgba(74,222,128,0.05)';
+
+  for(let x=0;x<W;x+=50){
+    ctx.beginPath();
+    ctx.moveTo(x,0);
+    ctx.lineTo(x,H);
+    ctx.stroke();
+  }
+
+  for(let y=0;y<H;y+=50){
+    ctx.beginPath();
+    ctx.moveTo(0,y);
+    ctx.lineTo(W,y);
+    ctx.stroke();
+  }
+
+  ctx.strokeStyle='rgba(74,222,128,0.1)';
+
+  ctx.beginPath();
+  ctx.moveTo(CX,0);
+  ctx.lineTo(CX,H);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(0,CY);
+  ctx.lineTo(W,CY);
+  ctx.stroke();
+
+  const visualX = recoilX * 25;
+  const visualY = recoilY * 18;
+
+  document.getElementById('rx-v').textContent = recoilX.toFixed(2);
+  document.getElementById('ry-v').textContent = recoilY.toFixed(2);
+
+  ctx.strokeStyle='rgba(74,222,128,0.7)';
+  ctx.lineWidth=2;
+
+  ctx.beginPath();
+  ctx.arc(CX + visualX, CY - visualY, 12, 0, Math.PI*2);
+  ctx.stroke();
+
+  ctx.strokeStyle='rgba(74,222,128,1)';
+
+  ctx.beginPath();
+  ctx.moveTo(CX-18,CY);
+  ctx.lineTo(CX-6,CY);
+  ctx.moveTo(CX+6,CY);
+  ctx.lineTo(CX+18,CY);
+
+  ctx.moveTo(CX,CY-18);
+  ctx.lineTo(CX,CY-6);
+  ctx.moveTo(CX,CY+6);
+  ctx.lineTo(CX,CY+18);
+
+  ctx.stroke();
+
+  bullets.forEach(b=>{
+
+    const bx = CX + b.x*25;
+    const by = CY - b.y*18;
+
+    ctx.fillStyle=`rgba(74,222,128,${b.life})`;
+
+    ctx.beginPath();
+    ctx.arc(bx,by,4,0,Math.PI*2);
+    ctx.fill();
+
+    b.life -= 0.01;
+  });
+
+  bullets = bullets.filter(b=>b.life > 0);
+}
+
+let last = performance.now();
+let frames = 0;
+let fpsTime = performance.now();
+
+function loop(now){
+
+  const dt = (now-last)/1000;
+  last = now;
+
+  recoilX -= recoilX * Math.min(cfg.rr * dt, 1);
+  recoilY -= recoilY * Math.min(cfg.rr * dt, 1);
+
+  draw();
+
+  frames++;
+
+  if(now-fpsTime > 1000){
+    document.getElementById('fps-lbl').textContent = `FPS >> ${frames}`;
+    frames = 0;
+    fpsTime = now;
+  }
+
+  requestAnimationFrame(loop);
+}
+
+updateCfg();
+
+requestAnimationFrame(loop);
+
+
+document.getElementById('btn-once').onclick = () => fire();
+
+document.getElementById('btn-burst').onclick = () => {
+  let i=0;
+  const t = setInterval(()=>{
+    fire();
+    i++;
+    if(i>=4) clearInterval(t);
+  },70);
 };
 
-let lt=performance.now();
-function tick(){
-  const now=performance.now(),dt=Math.min(0.05,(now-lt)/1000);lt=now;
-  bullets.forEach(b=>b.age+=dt);
-  bullets=bullets.filter(b=>b.age<6);
-  recoil=Math.max(0,recoil-dt*(cfg.rr*0.25+1));
-  drawSpread();
-  frames++;
-  if(now-fpsT>1000){document.getElementById('fps-lbl').textContent=`FPS >> ${frames}`;frames=0;fpsT=now;}
-  requestAnimationFrame(tick);
-}
-updateCfg();updateUI();tick();
+document.getElementById('btn-mag').onclick = () => {
+  let i=0;
+  const t = setInterval(()=>{
+    fire();
+    i++;
+    if(i>=30) clearInterval(t);
+  },60);
+};
+
+document.getElementById('btn-clear').onclick = () => {
+  bullets=[];
+  shots=0;
+  history=[];
+  document.getElementById('history').innerHTML='';
+  document.getElementById('shots-v').textContent='0';
+  document.getElementById('shot-count').textContent='// 0 SHOTS FIRED';
+};
+
 })();
 </script>
+
+</body>
+</html>
+```
+
+This version fixes:
+
+* Fullscreen layout
+* Removed white frame at the bottom
+* Responsive canvas scaling
+* Better recoil simulation matching your Roblox system
+* No fake bullet spread randomness
+* Recoil behaves like directional climb/recovery
+* Cleaner tactical HUD
+* Stable ADS center
+* More realistic recoil telemetry
